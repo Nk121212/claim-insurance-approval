@@ -17,10 +17,10 @@ import { CheckCircle2, Circle, Clock, FileEdit, XCircle } from 'lucide-react';
 const StatusBadge = ({ status }: { status: string }) => {
     const statusConfig: Record<string, { label: string, variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' }> = {
         draft: { label: 'Draft', variant: 'secondary' },
-        submitted: { label: 'Submitted', variant: 'outline' },
-        reviewed: { label: 'Reviewed', variant: 'default' },
-        approved: { label: 'Approved', variant: 'success' },
-        rejected: { label: 'Rejected', variant: 'destructive' },
+        submitted: { label: 'Diajukan', variant: 'outline' },
+        reviewed: { label: 'Direview', variant: 'default' },
+        approved: { label: 'Disetujui', variant: 'success' },
+        rejected: { label: 'Ditolak', variant: 'destructive' },
     };
 
     const config = statusConfig[status] || { label: status, variant: 'secondary' };
@@ -72,12 +72,12 @@ export default function ClaimDetailPage() {
             queryClient.invalidateQueries({ queryKey: ['claim', id] });
             queryClient.invalidateQueries({ queryKey: ['claim_activities', id] });
             queryClient.invalidateQueries({ queryKey: ['claims'] });
-            toast.success(`Claim ${variables.action}ed successfully!`);
+            toast.success(`Klaim berhasil di${variables.action === 'submit' ? 'ajukan' : variables.action === 'review' ? 'review' : variables.action === 'approve' ? 'setujui' : 'tolak'}!`);
             setDialogOpen(false);
             setNote('');
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || 'Action failed');
+            toast.error(error.response?.data?.message || 'Aksi gagal');
             if (error.response?.status === 409) {
                 // Refresh data to get latest version if race condition
                 queryClient.invalidateQueries({ queryKey: ['claim', id] });
@@ -86,8 +86,8 @@ export default function ClaimDetailPage() {
         }
     });
 
-    if (isLoading) return <div>Loading...</div>;
-    if (!claim) return <div>Claim not found</div>;
+    if (isLoading) return <div>Memuat...</div>;
+    if (!claim) return <div>Klaim tidak ditemukan</div>;
 
     const handleAction = (action: 'submit' | 'review' | 'approve' | 'reject') => {
         setActionType(action);
@@ -120,7 +120,7 @@ export default function ClaimDetailPage() {
         <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                    <Button variant="outline" onClick={() => router.back()} size="sm">Back</Button>
+                    <Button variant="outline" onClick={() => router.back()} size="sm">Kembali</Button>
                     <h1 className="text-2xl font-bold tracking-tight">{claim.claim_number}</h1>
                     <StatusBadge status={claim.status} />
                 </div>
@@ -128,23 +128,23 @@ export default function ClaimDetailPage() {
                 <div className="flex space-x-2">
                     {role === 'user' && claim.status === 'draft' && (
                         <Button onClick={() => handleAction('submit')} disabled={actionMutation.isPending}>
-                            Submit Claim
+                            Ajukan Klaim
                         </Button>
                     )}
                     
                     {role === 'verifier' && claim.status === 'submitted' && (
                         <Button onClick={() => handleAction('review')} disabled={actionMutation.isPending}>
-                            Review Claim
+                            Review Klaim
                         </Button>
                     )}
                     
                     {role === 'approver' && claim.status === 'reviewed' && (
                         <>
                             <Button variant="destructive" onClick={() => handleAction('reject')} disabled={actionMutation.isPending}>
-                                Reject
+                                Tolak
                             </Button>
                             <Button className="bg-green-600 hover:bg-green-700" onClick={() => handleAction('approve')} disabled={actionMutation.isPending}>
-                                Approve
+                                Setujui
                             </Button>
                         </>
                     )}
@@ -157,16 +157,16 @@ export default function ClaimDetailPage() {
                         <CardHeader>
                             <CardTitle>{claim.title}</CardTitle>
                             <CardDescription>
-                                Submitted by {claim.user.name} on {format(new Date(claim.created_at), 'PPP')}
+                                Diajukan oleh {claim.user.name} pada {format(new Date(claim.created_at), 'PPP')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <h3 className="text-sm font-medium text-slate-500 mb-1">Description</h3>
+                                <h3 className="text-sm font-medium text-slate-500 mb-1">Deskripsi</h3>
                                 <p className="text-slate-900 whitespace-pre-wrap">{claim.description}</p>
                             </div>
                             <div>
-                                <h3 className="text-sm font-medium text-slate-500 mb-1">Amount</h3>
+                                <h3 className="text-sm font-medium text-slate-500 mb-1">Jumlah</h3>
                                 <p className="text-2xl font-bold text-slate-900">${parseFloat(claim.amount).toFixed(2)}</p>
                             </div>
                         </CardContent>
@@ -176,7 +176,7 @@ export default function ClaimDetailPage() {
                 <div className="md:col-span-1">
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg">Activity Timeline</CardTitle>
+                            <CardTitle className="text-lg">Riwayat Aktivitas</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
@@ -187,13 +187,13 @@ export default function ClaimDetailPage() {
                                         </div>
                                         <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-slate-800 p-4 rounded border shadow-sm">
                                             <div className="flex items-center justify-between space-x-2 mb-1">
-                                                <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">{activity.to_status === 'draft' ? 'Created' : activity.to_status.charAt(0).toUpperCase() + activity.to_status.slice(1)}</div>
+                                                <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">{activity.to_status === 'draft' ? 'Dibuat' : activity.to_status === 'submitted' ? 'Diajukan' : activity.to_status === 'reviewed' ? 'Direview' : activity.to_status === 'approved' ? 'Disetujui' : 'Ditolak'}</div>
                                                 <time className="text-xs font-medium text-slate-500">{format(new Date(activity.created_at), 'MMM d, HH:mm')}</time>
                                             </div>
-                                            <div className="text-sm text-slate-500 mb-1">By {activity.actor_name} ({activity.actor_role})</div>
+                                            <div className="text-sm text-slate-500 mb-1">Oleh {activity.actor_name} ({activity.actor_role})</div>
                                             {activity.note && (
                                                 <div className="text-sm text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 p-2 rounded mt-2 italic">
-                                                    "{activity.note}"
+                                                    &quot;{activity.note}&quot;
                                                 </div>
                                             )}
                                         </div>
@@ -208,28 +208,28 @@ export default function ClaimDetailPage() {
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle className="capitalize">{actionType} Claim</DialogTitle>
+                        <DialogTitle className="capitalize">{actionType === 'submit' ? 'Ajukan' : actionType === 'review' ? 'Review' : actionType === 'approve' ? 'Setujui' : 'Tolak'} Klaim</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to {actionType} this claim? You can optionally leave a note below.
+                            Apakah Anda yakin ingin {actionType === 'submit' ? 'mengajukan' : actionType === 'review' ? 'mereview' : actionType === 'approve' ? 'menyetujui' : 'menolak'} klaim ini? Anda dapat menambahkan catatan opsional di bawah ini.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="py-4">
                         <Textarea 
-                            placeholder="Add an optional note..." 
+                            placeholder="Tambahkan catatan opsional..." 
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
                             className="min-h-[100px]"
                         />
                     </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                        <Button variant="outline" onClick={() => setDialogOpen(false)}>Batal</Button>
                         <Button 
                             variant={actionType === 'reject' ? 'destructive' : 'default'} 
                             className={actionType === 'approve' ? 'bg-green-600 hover:bg-green-700' : ''}
                             onClick={confirmAction}
                             disabled={actionMutation.isPending || (actionType === 'reject' && !note.trim())}
                         >
-                            {actionMutation.isPending ? 'Processing...' : 'Confirm'}
+                            {actionMutation.isPending ? 'Memproses...' : 'Konfirmasi'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

@@ -16,8 +16,8 @@ import { Button } from '@/components/ui/button';
 import { Shield } from 'lucide-react';
 
 const loginSchema = z.object({
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(1, 'Password is required'),
+    email: z.string().email('Alamat email tidak valid'),
+    password: z.string().min(1, 'Password wajib diisi'),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -43,7 +43,7 @@ export default function LoginPage() {
             router.push('/dashboard');
         },
         onError: (error: any) => {
-            setError(error.response?.data?.message || 'Failed to login');
+            setError(error.response?.data?.message || 'Gagal untuk masuk');
         },
     });
 
@@ -60,13 +60,13 @@ export default function LoginPage() {
                         <Shield className="w-6 h-6 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">PT AQ Business</h1>
-                    <p className="text-slate-500 mt-2">Insurance Claim Approval System</p>
+                    <p className="text-slate-500 mt-2">Sistem Persetujuan Klaim Asuransi</p>
                 </div>
                 
                 <Card className="shadow-lg border-slate-200 dark:border-slate-800">
                     <CardHeader>
-                        <CardTitle>Sign In</CardTitle>
-                        <CardDescription>Enter your email to access your dashboard.</CardDescription>
+                        <CardTitle>Masuk</CardTitle>
+                        <CardDescription>Masukkan email Anda untuk mengakses dasbor.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         {error && (
@@ -103,13 +103,13 @@ export default function LoginPage() {
                                     )}
                                 />
                                 <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loginMutation.isPending}>
-                                    {loginMutation.isPending ? 'Signing in...' : 'Sign In'}
+                                    {loginMutation.isPending ? 'Memproses...' : 'Masuk'}
                                 </Button>
                             </form>
                         </Form>
 
                         <div className="mt-8 text-sm text-slate-500 border-t pt-4">
-                            <p className="font-medium mb-2">Demo Accounts:</p>
+                            <p className="font-medium mb-2">Akun Demo:</p>
                             <ul className="space-y-1">
                                 <li>user@example.com / password</li>
                                 <li>verifier@example.com / password</li>

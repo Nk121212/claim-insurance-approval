@@ -19,14 +19,14 @@ export default function DashboardPage() {
     });
 
     if (isLoading) {
-        return <div>Loading dashboard data...</div>;
+        return <div>Memuat data dasbor...</div>;
     }
 
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                <p className="text-slate-500">Welcome back, {user?.name}</p>
+                <h1 className="text-3xl font-bold tracking-tight">Dasbor</h1>
+                <p className="text-slate-500">Selamat datang kembali, {user?.name}</p>
             </div>
 
             {role === 'user' && (
@@ -34,7 +34,7 @@ export default function DashboardPage() {
                     <div className="grid gap-4 md:grid-cols-3">
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Total Claims</CardTitle>
+                                <CardTitle className="text-sm font-medium">Total Klaim</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.total_claims || 0}</div>
@@ -42,7 +42,7 @@ export default function DashboardPage() {
                         </Card>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Draft Claims</CardTitle>
+                                <CardTitle className="text-sm font-medium">Klaim Draft</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.draft_claims || 0}</div>
@@ -50,7 +50,7 @@ export default function DashboardPage() {
                         </Card>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Submitted Claims</CardTitle>
+                                <CardTitle className="text-sm font-medium">Klaim Diajukan</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.submitted_claims || 0}</div>
@@ -60,7 +60,7 @@ export default function DashboardPage() {
 
                     <Card className="col-span-4">
                         <CardHeader>
-                            <CardTitle>Claims by Status</CardTitle>
+                            <CardTitle>Klaim Berdasarkan Status</CardTitle>
                         </CardHeader>
                         <CardContent className="pl-2">
                             <div className="h-[300px]">
@@ -84,18 +84,18 @@ export default function DashboardPage() {
                     <div className="grid gap-4 md:grid-cols-3">
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+                                <CardTitle className="text-sm font-medium">Menunggu Review</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.pending_review || 0}</div>
-                                <p className="text-xs text-slate-500">Claims waiting for your review</p>
+                                <p className="text-xs text-slate-500">Klaim yang menunggu review Anda</p>
                             </CardContent>
                         </Card>
                     </div>
 
                     <Card className="col-span-4">
                         <CardHeader>
-                            <CardTitle>Claims Submitted (Last 7 Days)</CardTitle>
+                            <CardTitle>Klaim Diajukan (7 Hari Terakhir)</CardTitle>
                         </CardHeader>
                         <CardContent className="pl-2">
                             <div className="h-[300px]">
@@ -119,18 +119,18 @@ export default function DashboardPage() {
                     <div className="grid gap-4 md:grid-cols-3">
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Pending Approval</CardTitle>
+                                <CardTitle className="text-sm font-medium">Menunggu Persetujuan</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.pending_approval || 0}</div>
-                                <p className="text-xs text-slate-500">Claims waiting for your approval</p>
+                                <p className="text-xs text-slate-500">Klaim yang menunggu persetujuan Anda</p>
                             </CardContent>
                         </Card>
                     </div>
 
                     <Card className="col-span-4">
                         <CardHeader>
-                            <CardTitle>Approved vs Rejected Claims</CardTitle>
+                            <CardTitle>Klaim Disetujui vs Ditolak</CardTitle>
                         </CardHeader>
                         <CardContent className="pl-2">
                             <div className="h-[300px]">

@@ -15,16 +15,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     const getNavigation = () => {
         const nav = [
-            { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }
+            { name: 'Dasbor', href: '/dashboard', icon: LayoutDashboard }
         ];
 
         if (role === 'user') {
-            nav.push({ name: 'Create Claim', href: '/claims/new', icon: PlusCircle });
-            nav.push({ name: 'My Claims', href: '/claims', icon: FileText });
+            nav.push({ name: 'Buat Klaim', href: '/claims/new', icon: PlusCircle });
+            nav.push({ name: 'Klaim Saya', href: '/claims', icon: FileText });
         } else if (role === 'verifier') {
-            nav.push({ name: 'Submitted Claims', href: '/claims', icon: FileText });
+            nav.push({ name: 'Klaim Masuk', href: '/claims', icon: FileText });
         } else if (role === 'approver') {
-            nav.push({ name: 'Reviewed Claims', href: '/claims', icon: FileText });
+            nav.push({ name: 'Klaim Direview', href: '/claims', icon: FileText });
         }
 
         return nav;
@@ -43,7 +43,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <nav className="space-y-1 px-3">
                             {getNavigation().map((item) => {
                                 const Icon = item.icon;
-                                const isActive = pathname === item.href || (pathname.startsWith(item.href) && item.href !== '/dashboard');
+                                const isActive = item.href === '/claims' ? (pathname === '/claims' || (pathname.startsWith('/claims/') && !pathname.startsWith('/claims/new'))) : (pathname === item.href || (pathname.startsWith(item.href + '/') && item.href !== '/dashboard'));
                                 return (
                                     <Link 
                                         key={item.name} 
@@ -70,7 +70,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </div>
                         <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950" onClick={logout}>
                             <LogOut className="mr-2 h-4 w-4" />
-                            Sign Out
+                            Keluar
                         </Button>
                     </div>
                 </div>

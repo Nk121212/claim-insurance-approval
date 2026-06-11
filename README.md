@@ -1,40 +1,40 @@
-# Insurance Claim Approval System
+# Sistem Persetujuan Klaim Asuransi
 
-This is a production-ready web application for PT AQ Business Consulting Indonesia to handle internal insurance claim workflows.
+Ini adalah aplikasi web siap produksi (production-ready) untuk PT AQ Business Consulting Indonesia yang dirancang untuk menangani alur kerja persetujuan klaim asuransi internal.
 
-## Technology Stack
+## Teknologi yang Digunakan
 
 ### Backend
 - **Framework**: Laravel 12 (PHP 8.4+)
 - **Database**: PostgreSQL
-- **Architecture**: Repository Pattern, Service Layer
-- **Features**: Database Transactions, Pessimistic & Optimistic Locking, Audit Trails
+- **Arsitektur**: Repository Pattern, Service Layer
+- **Fitur**: Database Transactions, Pessimistic & Optimistic Locking, Audit Trails
 
 ### Frontend
 - **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
+- **Bahasa**: TypeScript
 - **Styling**: TailwindCSS, Shadcn UI
 - **State Management**: Zustand, TanStack Query
 
-## Workflow Architecture
+## Arsitektur Alur Kerja (Workflow)
 
-The application implements a multi-tier approval workflow with strict state transitions and race condition protection.
+Aplikasi ini menerapkan alur kerja persetujuan bertingkat dengan transisi status yang ketat dan perlindungan dari *race condition* (konflik data).
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Draft: User Creates Claim
-    Draft --> Submitted: User Submits
+    [*] --> Draft: User Membuat Klaim
+    Draft --> Submitted: User Mengajukan
     
-    Submitted --> Reviewed: Verifier Reviews
+    Submitted --> Reviewed: Verifier Mereview
     
-    Reviewed --> Approved: Approver Approves
-    Reviewed --> Rejected: Approver Rejects
+    Reviewed --> Approved: Approver Menyetujui
+    Reviewed --> Rejected: Approver Menolak
     
     Approved --> [*]
     Rejected --> [*]
 ```
 
-## System Architecture
+## Arsitektur Sistem
 
 ```mermaid
 graph TD
@@ -64,26 +64,90 @@ graph TD
     end
 ```
 
-## Running the Application
+## Menjalankan Aplikasi
 
-This project includes a fully configured Docker setup.
+Aplikasi ini dapat dijalankan menggunakan **Docker** (Sangat Direkomendasikan) atau **Local Environment** secara manual.
+
+### Opsi 1: Menggunakan Docker (Direkomendasikan)
+
+Cara termudah untuk menjalankan aplikasi beserta seluruh *database* tanpa perlu mengonfigurasi PC lokal Anda.
 
 ```bash
-# Start all services (Backend, Frontend, PostgreSQL)
+# Jalankan semua services (Backend, Frontend, PostgreSQL) di latar belakang
 docker-compose up -d --build
 
-# Run backend migrations and seeders (demo accounts)
+# Jalankan migrasi dan seeder untuk membuat akun demo
 docker-compose exec backend php artisan migrate --seed
 ```
 
-### Demo Accounts
-- **Requester**: user@example.com / password
-- **Verifier**: verifier@example.com / password
-- **Approver**: approver@example.com / password
+### Opsi 2: Menggunakan Local Environment (Tanpa Docker)
 
-## Key Features Implemented
-- **Concurrency Control**: 
-  - `SELECT FOR UPDATE` is used to prevent duplicate claim numbers during concurrent creation.
-  - Optimistic locking (using a `version` field) prevents race conditions during status updates by concurrent users.
-- **Audit Logging**: Every status transition automatically triggers an event (`ClaimStatusChanged`) which creates an immutable record in the `claim_activity_logs` table.
-- **Security**: Sanctum API Tokens, Role-based Access Control (Spatie Permission), Policy Gates.
+Jika Anda ingin menjalankan proyek secara *native* di laptop Anda (membutuhkan PHP 8.4+, Node.js 20+, Composer, dan PostgreSQL yang sudah terinstal di sistem Anda).
+
+#### A. Kondisi Pertama Kali Install (First-time Setup)
+
+**1. Setup Database (PostgreSQL)**
+- Pastikan service PostgreSQL Anda sedang berjalan.
+- Buka tools database Anda (Navicat/pgAdmin/DBeaver) dan buat database kosong baru dengan nama `approval_system`.
+
+**2. Setup Backend (Laravel)**
+Buka terminal baru, lalu masuk ke folder direktori `backend`:
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+Buka file `backend/.env` dan ubah konfigurasi database Anda sesuai kredensial lokal PostgreSQL Anda, contoh:
+```ini
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=approval_system
+DB_USERNAME=postgres  # Sesuaikan dengan user PostgreSQL lokal Anda
+DB_PASSWORD=password  # Sesuaikan dengan password lokal Anda
+```
+Jalankan migrasi dan buat akun demo, lalu jalankan server:
+```bash
+php artisan migrate --seed
+php artisan serve
+```
+*Backend API Anda sekarang berjalan di `http://127.0.0.1:8000`*
+
+**3. Setup Frontend (Next.js)**
+Buka terminal baru (biarkan terminal backend tetap berjalan), lalu masuk ke folder direktori `frontend`:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*Frontend Web Anda sekarang berjalan di `http://localhost:3000`*
+
+#### B. Jika Sudah Pernah Diinstall (Daily Usage)
+
+Jika Anda sudah pernah melakukan instalasi dan setup awal sebelumnya, Anda hanya perlu menjalankan *server development* secara bersamaan:
+
+**Terminal 1 (Jalankan Backend):**
+```bash
+cd backend
+php artisan serve
+```
+
+**Terminal 2 (Jalankan Frontend):**
+```bash
+cd frontend
+npm run dev
+```
+*(Jangan lupa pastikan service PostgreSQL lokal Anda juga sudah dinyalakan)*
+
+### Akun Demo
+- **Pemohon (User)**: user@example.com / password
+- **Verifier (Pemeriksa)**: verifier@example.com / password
+- **Approver (Penyetuju)**: approver@example.com / password
+
+## Fitur Utama yang Diimplementasikan
+- **Concurrency Control (Kontrol Konkurensi)**: 
+  - Penggunaan `SELECT FOR UPDATE` (*Pessimistic Locking*) untuk mencegah duplikasi Nomor Klaim saat banyak user membuat klaim dalam waktu yang persis bersamaan.
+  - *Optimistic Locking* (menggunakan field `version`) untuk mencegah *race condition* atau penumpukan update status ketika ada dua user mencoba merubah status klaim di waktu yang sama.
+- **Audit Logging (Riwayat Aktivitas)**: Setiap perubahan status akan memicu *event listener* (`ClaimStatusChanged`) secara otomatis yang akan mencatat riwayat permanen ke dalam tabel `claim_activity_logs` beserta nama pelakunya.
+- **Security & Authorization**: Proteksi autentikasi API menggunakan Sanctum, dan kontrol hak akses halaman serta endpoint berdasarkan peran (Role-based Access Control via Spatie Permission dan Laravel Policy Gates).

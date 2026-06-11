@@ -12,10 +12,10 @@ import { format } from 'date-fns';
 const StatusBadge = ({ status }: { status: string }) => {
     const statusConfig: Record<string, { label: string, variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' }> = {
         draft: { label: 'Draft', variant: 'secondary' },
-        submitted: { label: 'Submitted', variant: 'outline' },
-        reviewed: { label: 'Reviewed', variant: 'default' },
-        approved: { label: 'Approved', variant: 'success' },
-        rejected: { label: 'Rejected', variant: 'destructive' },
+        submitted: { label: 'Diajukan', variant: 'outline' },
+        reviewed: { label: 'Direview', variant: 'default' },
+        approved: { label: 'Disetujui', variant: 'success' },
+        rejected: { label: 'Ditolak', variant: 'destructive' },
     };
 
     const config = statusConfig[status] || { label: status, variant: 'secondary' };
@@ -39,14 +39,14 @@ export default function ClaimsPage() {
         }
     });
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <div>Memuat...</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold tracking-tight">Claims</h1>
+                <h1 className="text-3xl font-bold tracking-tight">Klaim</h1>
                 {role === 'user' && (
-                    <Link href="/claims/new" className={buttonVariants({})}>Create Claim</Link>
+                    <Link href="/claims/new" className={buttonVariants({})}>Buat Klaim</Link>
                 )}
             </div>
 
@@ -54,20 +54,20 @@ export default function ClaimsPage() {
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-slate-50 dark:bg-slate-800/50">
-                            <TableHead>Claim Number</TableHead>
-                            <TableHead>Title</TableHead>
-                            {role !== 'user' && <TableHead>Requester</TableHead>}
-                            <TableHead>Amount</TableHead>
+                            <TableHead>Nomor Klaim</TableHead>
+                            <TableHead>Judul</TableHead>
+                            {role !== 'user' && <TableHead>Pemohon</TableHead>}
+                            <TableHead>Jumlah</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead>Date</TableHead>
-                            <TableHead className="text-right">Action</TableHead>
+                            <TableHead>Tanggal</TableHead>
+                            <TableHead className="text-right">Aksi</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {claims?.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={role !== 'user' ? 7 : 6} className="text-center py-8 text-slate-500">
-                                    No claims found.
+                                    Tidak ada klaim ditemukan.
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -83,7 +83,7 @@ export default function ClaimsPage() {
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <Link href={`/claims/${claim.id}`} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
-                                            View Details
+                                            Lihat Detail
                                         </Link>
                                     </TableCell>
                                 </TableRow>

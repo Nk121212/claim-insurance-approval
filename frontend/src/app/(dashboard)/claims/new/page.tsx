@@ -14,9 +14,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
 const claimSchema = z.object({
-    title: z.string().min(3, 'Title must be at least 3 characters'),
-    description: z.string().min(10, 'Description must be at least 10 characters'),
-    amount: z.coerce.number().positive('Amount must be greater than 0'),
+    title: z.string().min(3, 'Judul minimal 3 karakter'),
+    description: z.string().min(10, 'Deskripsi minimal 10 karakter'),
+    amount: z.coerce.number().positive('Jumlah harus lebih dari 0'),
 });
 
 type ClaimFormValues = z.infer<typeof claimSchema>;
@@ -41,11 +41,11 @@ export default function CreateClaimPage() {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['claims'] });
-            toast.success('Claim created successfully!');
+            toast.success('Klaim berhasil dibuat!');
             router.push(`/claims/${data.id}`);
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || 'Failed to create claim');
+            toast.error(error.response?.data?.message || 'Gagal membuat klaim');
         },
     });
 
@@ -57,16 +57,16 @@ export default function CreateClaimPage() {
         <div className="max-w-2xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Create Claim</h1>
-                    <p className="text-slate-500">Submit a new insurance claim request.</p>
+                    <h1 className="text-3xl font-bold tracking-tight">Buat Klaim</h1>
+                    <p className="text-slate-500">Ajukan permintaan klaim asuransi baru.</p>
                 </div>
-                <Button variant="outline" onClick={() => router.back()}>Cancel</Button>
+                <Button variant="outline" onClick={() => router.back()}>Batal</Button>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Claim Details</CardTitle>
-                    <CardDescription>Provide accurate information for your claim to speed up the approval process.</CardDescription>
+                    <CardTitle>Detail Klaim</CardTitle>
+                    <CardDescription>Berikan informasi akurat untuk mempercepat proses persetujuan.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
@@ -76,9 +76,9 @@ export default function CreateClaimPage() {
                                 name="title"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Title</FormLabel>
+                                        <FormLabel>Judul</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="e.g. Medical Checkup Expense" {...field} />
+                                            <Input placeholder="cth. Biaya Checkup Medis" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -90,7 +90,7 @@ export default function CreateClaimPage() {
                                 name="amount"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Amount (USD)</FormLabel>
+                                        <FormLabel>Jumlah (USD)</FormLabel>
                                         <FormControl>
                                             <Input type="number" step="0.01" placeholder="0.00" {...field} value={field.value as any} />
                                         </FormControl>
@@ -104,10 +104,10 @@ export default function CreateClaimPage() {
                                 name="description"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Description</FormLabel>
+                                        <FormLabel>Deskripsi</FormLabel>
                                         <FormControl>
                                             <Textarea 
-                                                placeholder="Please provide detailed information about the expense..." 
+                                                placeholder="Berikan informasi detail mengenai pengeluaran Anda..." 
                                                 className="min-h-[120px]"
                                                 {...field} 
                                             />
@@ -119,7 +119,7 @@ export default function CreateClaimPage() {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={createMutation.isPending}>
-                                    {createMutation.isPending ? 'Saving...' : 'Save as Draft'}
+                                    {createMutation.isPending ? 'Menyimpan...' : 'Simpan sebagai Draft'}
                                 </Button>
                             </div>
                         </form>
