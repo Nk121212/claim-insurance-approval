@@ -119,6 +119,13 @@ Buka terminal baru (biarkan terminal backend tetap berjalan), lalu masuk ke fold
 ```bash
 cd frontend
 npm install
+```
+Buat file baru bernama `.env` di dalam folder `frontend`, dan isi dengan URL API lokal backend Anda:
+```ini
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
+```
+Lalu jalankan server frontend:
+```bash
 npm run dev
 ```
 *Frontend Web Anda sekarang berjalan di `http://localhost:3000`*

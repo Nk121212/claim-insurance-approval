@@ -5,6 +5,7 @@ import api from '@/lib/axios';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from 'recharts';
+import { Loader2 } from 'lucide-react';
 
 export default function DashboardPage() {
     const { user } = useAuthStore();
@@ -19,7 +20,12 @@ export default function DashboardPage() {
     });
 
     if (isLoading) {
-        return <div>Memuat data dasbor...</div>;
+        return (
+            <div className="flex flex-col items-center justify-center h-[60vh]">
+                <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
+                <p className="text-slate-500">Memuat data dasbor...</p>
+            </div>
+        );
     }
 
     return (

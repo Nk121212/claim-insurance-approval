@@ -27,6 +27,8 @@ const StatusBadge = ({ status }: { status: string }) => {
     );
 };
 
+import { Loader2 } from 'lucide-react';
+
 export default function ClaimsPage() {
     const { user } = useAuthStore();
     const role = user?.role || 'user';
@@ -39,19 +41,25 @@ export default function ClaimsPage() {
         }
     });
 
-    if (isLoading) return <div>Memuat...</div>;
+    if (isLoading) return (
+        <div className="flex flex-col items-center justify-center h-[60vh]">
+            <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
+            <p className="text-slate-500">Memuat daftar klaim...</p>
+        </div>
+    );
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h1 className="text-3xl font-bold tracking-tight">Klaim</h1>
                 {role === 'user' && (
-                    <Link href="/claims/new" className={buttonVariants({})}>Buat Klaim</Link>
+                    <Link href="/claims/new" className={`w-full sm:w-auto ${buttonVariants({})}`}>Buat Klaim</Link>
                 )}
             </div>
 
             <div className="border rounded-md bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-                <Table>
+                <div className="overflow-x-auto">
+                    <Table className="min-w-[800px]">
                     <TableHeader>
                         <TableRow className="bg-slate-50 dark:bg-slate-800/50">
                             <TableHead>Nomor Klaim</TableHead>
@@ -91,6 +99,7 @@ export default function ClaimsPage() {
                         )}
                     </TableBody>
                 </Table>
+                </div>
             </div>
         </div>
     );

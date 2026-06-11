@@ -54,8 +54,8 @@ export default function CreateClaimPage() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="w-full space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Buat Klaim</h1>
                     <p className="text-slate-500">Ajukan permintaan klaim asuransi baru.</p>
@@ -84,13 +84,13 @@ export default function CreateClaimPage() {
                                     </FormItem>
                                 )}
                             />
-                            
+
                             <FormField
                                 control={form.control}
                                 name="amount"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Jumlah (USD)</FormLabel>
+                                        <FormLabel>Jumlah (IDR)</FormLabel>
                                         <FormControl>
                                             <Input type="number" step="0.01" placeholder="0.00" {...field} value={field.value as any} />
                                         </FormControl>
@@ -106,10 +106,10 @@ export default function CreateClaimPage() {
                                     <FormItem>
                                         <FormLabel>Deskripsi</FormLabel>
                                         <FormControl>
-                                            <Textarea 
-                                                placeholder="Berikan informasi detail mengenai pengeluaran Anda..." 
+                                            <Textarea
+                                                placeholder="Berikan informasi detail mengenai pengeluaran Anda..."
                                                 className="min-h-[120px]"
-                                                {...field} 
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormMessage />

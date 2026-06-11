@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
-import { CheckCircle2, Circle, Clock, FileEdit, XCircle } from 'lucide-react';
+import { CheckCircle2, Circle, Clock, FileEdit, XCircle, Loader2 } from 'lucide-react';
 
 const StatusBadge = ({ status }: { status: string }) => {
     const statusConfig: Record<string, { label: string, variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' }> = {
@@ -51,7 +51,7 @@ export default function ClaimDetailPage() {
         }
     });
 
-    const { data: activities } = useQuery({
+    const { data: activities, isLoading: isLoadingActivities } = useQuery({
         queryKey: ['claim_activities', id],
         queryFn: async () => {
             const response = await api.get(`/api/claims/${id}/activities`);
@@ -86,7 +86,12 @@ export default function ClaimDetailPage() {
         }
     });
 
-    if (isLoading) return <div>Memuat...</div>;
+    if (isLoading) return (
+        <div className="flex flex-col items-center justify-center h-[60vh]">
+            <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
+            <p className="text-slate-500">Memuat data klaim...</p>
+        </div>
+    );
     if (!claim) return <div>Klaim tidak ditemukan</div>;
 
     const handleAction = (action: 'submit' | 'review' | 'approve' | 'reject') => {
@@ -117,15 +122,15 @@ export default function ClaimDetailPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="w-full space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center space-x-4">
                     <Button variant="outline" onClick={() => router.back()} size="sm">Kembali</Button>
                     <h1 className="text-2xl font-bold tracking-tight">{claim.claim_number}</h1>
                     <StatusBadge status={claim.status} />
                 </div>
                 
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                     {role === 'user' && claim.status === 'draft' && (
                         <Button onClick={() => handleAction('submit')} disabled={actionMutation.isPending}>
                             Ajukan Klaim
@@ -179,7 +184,13 @@ export default function ClaimDetailPage() {
                             <CardTitle className="text-lg">Riwayat Aktivitas</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                            {isLoadingActivities ? (
+                                <div className="flex flex-col items-center justify-center py-8">
+                                    <Loader2 className="w-6 h-6 animate-spin text-slate-400 mb-2" />
+                                    <p className="text-sm text-slate-500">Memuat riwayat...</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
                                 {activities?.map((activity: any, index: number) => (
                                     <div key={activity.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                                         <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-100 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 relative">
@@ -200,6 +211,7 @@ export default function ClaimDetailPage() {
                                     </div>
                                 ))}
                             </div>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
