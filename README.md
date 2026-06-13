@@ -2,6 +2,8 @@
 
 Ini adalah aplikasi web siap produksi (production-ready) untuk PT AQ Business Consulting Indonesia yang dirancang untuk menangani alur kerja persetujuan klaim asuransi internal.
 
+**🔗 Repository:** [https://github.com/Nk121212/claim-insurance-approval.git](https://github.com/Nk121212/claim-insurance-approval.git)
+
 ## Teknologi yang Digunakan
 
 ### Backend
@@ -151,6 +153,15 @@ npm run dev
 - **Pemohon (User)**: user@example.com / password
 - **Verifier (Pemeriksa)**: verifier@example.com / password
 - **Approver (Penyetuju)**: approver@example.com / password
+
+## Pengujian Otomatis (Automated Testing)
+
+Aplikasi ini telah dilengkapi dengan *unit* dan *feature testing*, termasuk tes khusus yang mensimulasikan penanganan **Race Condition** secara ketat.
+Untuk menjalankan seluruh test pada *backend*, jalankan:
+```bash
+cd backend
+php artisan test
+```
 
 ## Fitur Utama yang Diimplementasikan
 - **Concurrency Control (Kontrol Konkurensi)**: 
