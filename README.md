@@ -68,7 +68,23 @@ graph TD
 
 ## Menjalankan Aplikasi
 
-Aplikasi ini dapat dijalankan menggunakan **Docker** (Sangat Direkomendasikan) atau **Local Environment** secara manual.
+### Langkah Persiapan (Mendapatkan Source Code)
+
+**Opsi A: Menggunakan Git (Direkomendasikan)**
+Jika Anda sudah menginstal Git di sistem Anda, jalankan perintah berikut:
+```bash
+git clone https://github.com/Nk121212/claim-insurance-approval.git
+cd claim-insurance-approval
+```
+
+**Opsi B: Mengunduh File ZIP (Tanpa Git)**
+Jika Anda belum menginstal Git, Anda dapat mengunduh *source code* secara langsung:
+1. Buka tautan repository di browser: [https://github.com/Nk121212/claim-insurance-approval](https://github.com/Nk121212/claim-insurance-approval)
+2. Klik tombol hijau **"<> Code"** yang berada di kanan atas, lalu pilih **"Download ZIP"**.
+3. Ekstrak file ZIP tersebut di folder pilihan Anda.
+4. Buka terminal (atau Command Prompt) lalu arahkan (`cd`) ke dalam folder hasil ekstraksi tersebut.
+
+Setelah itu, aplikasi ini dapat dijalankan menggunakan **Docker** (Sangat Direkomendasikan) atau **Local Environment** secara manual.
 
 ### Opsi 1: Menggunakan Docker (Direkomendasikan)
 
