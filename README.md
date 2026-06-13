@@ -106,8 +106,8 @@ DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_DATABASE=approval_system
-DB_USERNAME=postgres  # Sesuaikan dengan user PostgreSQL lokal Anda
-DB_PASSWORD=password  # Sesuaikan dengan password lokal Anda
+DB_USERNAME=[username_anda]  # Sesuaikan dengan user PostgreSQL lokal Anda
+DB_PASSWORD=[password_anda]  # Sesuaikan dengan password lokal Anda
 ```
 Jalankan migrasi dan buat akun demo, lalu jalankan server:
 ```bash
